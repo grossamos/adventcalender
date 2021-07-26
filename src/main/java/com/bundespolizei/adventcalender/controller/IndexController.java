@@ -36,11 +36,11 @@ public class IndexController {
         return "index";
     }
 
-    @GetMapping("/admin")
-    public RedirectView adminRedirect() {
-        // redirect to the actual location of the admin panel
-        return new RedirectView("/admin/");
-    }
+//    @GetMapping("/admin")
+//    public RedirectView adminRedirect() {
+//        // redirect to the actual location of the admin panel
+//        return new RedirectView("/admin/");
+//    }
 
     @GetMapping("/answer/{answerIndex}")
     public String answerForm(@PathVariable int answerIndex, Model model, @CookieValue(value = "email", defaultValue = "NONE") String emailJWT) {
@@ -69,5 +69,11 @@ public class IndexController {
             response.addCookie(cookie);
         }
         return "submit";
+    }
+
+    // TODO add PROPPER /error page for 404, 403, etc.
+    @GetMapping("/error")
+    public String error() {
+        return "error";
     }
 }

@@ -225,10 +225,11 @@
     "correctAnswerIndex": 0
   },
   {
-    "question": "Who is Ultraman 26",
+    "question": "Who is Ultraman 26, hm is this long?",
     "answers": [
       "How should I know",
       "hm",
+      "Yep 99 one hundred to 88 to 99",
       "empty"
     ],
     "correctAnswerIndex": 1

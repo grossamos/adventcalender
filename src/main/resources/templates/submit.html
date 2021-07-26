@@ -5,12 +5,19 @@
 </head>
 <body>
 <nav th:replace="titlebar.html :: navbar"></nav>
-<div class="main-content">
+<div class="card-main-content">
     <div th:if="${isOkay}">
-        <p>Danke fuers teilnehmen</p>
+        <h2 class="card-title">Danke f&uuml;r's Teilnehmen!</h2>
+        <div class="card-content">
+            <img class="okay-image" th:src="@{/images/ok.svg}" src="#">
+            <p class="card-text">Wer die heutige Verlosung gewonnen hat, wird morgen bekannt gegeben.<br><br>Das nächste Quiz Gibt’s dann morgen!</p>
+        </div>
     </div>
     <div th:unless="${isOkay}">
-        <p>You messed up, use a correct email address</p>
+        <h2 class="card-title">Danke f&uuml;r's Teilnehmen!</h2>
+        <div class="card-content">
+            <p class="card-text">Leider können wir nur BPol Adressen ber&uuml;cksichtigen, versuchen Sie es gerne nocheinmal.</p>
+        </div>
     </div>
 </div>
 </body>

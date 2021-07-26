@@ -6,7 +6,8 @@
 </head>
 <body>
     <p>Admin panel</p>
-    <p th:text="'Winner: ' + ${random.emailAddress}"></p>
+    <a th:text="Today" th:href="'/admin/' + ${authToken} + '/winner'"></a>
+    <p th:text="'Random: ' + ${random.emailAddress}"></p>
     <div th:each="participant : ${participants}">
         <p th:text="${participant.emailAddress} + ' ' + ${participant.selectedIndex}"></p>
     </div>

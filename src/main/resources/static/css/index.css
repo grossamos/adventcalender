@@ -1,10 +1,55 @@
-body {
-}
-
-.main-content {
-    position: fixed;
-    top: 5em;
+.card-main-content {
     background-color: white;
     z-index: 40;
-    padding: 1em;
+    max-width: 20em;
+    margin-top: 2em;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: rgba(0, 0, 0, 0.35) 0 10px 20px;
+}
+
+.answer-text {
+    color: black;
+    font-size: 24px;
+}
+
+.answer-container {
+    border: 2px solid black;
+    padding: 0.5em;
+    border-radius: 0.5em;
+}
+
+.card-content {
+    padding: 1.5em;
+}
+
+.card-title {
+    font-weight: normal;
+    font-size: 24px;
+    background-color: #E4E4E4;
+    color: black;
+    padding: var(--content-inner-padding);
+    margin: 0;
+}
+
+.card-text {
+    font-size: 20px;
+    color: #6A6868;
+    margin: 0 0 1em;
+}
+
+.text-input-field {
+    font-size: 16px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0 1px 5px;
+    border-style: none;
+    border-radius: 0.5em;
+    padding: 0.7em;
+    background-color: white;
+}
+
+.okay-image {
+    text-align: center;
+    display: block;
+    width: 7em;
+    margin: 0 auto 1em;
 }

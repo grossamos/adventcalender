@@ -6,10 +6,12 @@
 <body>
     <nav th:replace="titlebar.html :: navbar">
     </nav>
-    <div class="main-content">
-        <h2 th:text="${question.getQuestion()}"></h2>
-        <div th:each="answer, stat : ${question.getAnswers()}">
-            <a th:href="'/answer/' + ${stat.index}" th:text="${answer}"></a>
+    <div class="card-main-content">
+        <h2 class="card-title" th:text="${question.getQuestion()}"></h2>
+        <div class="card-content">
+            <div th:each="answer, stat : ${question.getAnswers()}">
+                <p class="answer-container"><a class="answer-text" th:href="'/answer/' + ${stat.index}" th:text="${stat.index + 1} + ') ' + ${answer}"></a></p>
+            </div>
         </div>
     </div>
 </body>

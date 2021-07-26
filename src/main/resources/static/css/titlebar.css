@@ -6,26 +6,18 @@
 }
 
 .navbar-title-container {
+    display: inline;
     padding: 0;
-    margin: 0;
-    position: fixed;
-    top: var(--navbar-top-distance);
-    left: var(--navbar-side-distance);
-    z-index: 20;
 }
 
 .navbar-logo {
-    top: 1.8em;
-    right: 1.2em;
-    position: fixed;
-    z-index: 20;
 }
 
-.navbar-background {
-    background-image: linear-gradient(#8900b6, #aa02a2);
-    height: 65vh;
-    width: 100%;
-    position: fixed;
-    z-index: 10;
-    top: 0;
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-content: space-between;
+    margin-top: var(--content-top-distance);
+    margin-left: var(--content-side-distance);
+    margin-right: var(--content-side-distance);
 }

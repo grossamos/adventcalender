@@ -5,11 +5,14 @@
 </head>
 <body>
   <nav th:replace="titlebar.html :: navbar"></nav>
-  <div class="main-content">
-    <form action="#" th:action="'/submit/' + ${answer}" th:object="${emailform}" method="post">
-      <label>email: </label>
-      <input type="email" th:field="*{emailadress}">
-    </form>
+  <div class="card-main-content">
+    <h2 class="card-title">Danke f&uuml;r's Teilnehmen!</h2>
+    <div class="card-content">
+      <p class="card-text">Falls Sie Bundespolizist*in sind und interesse an der Adventsverlosung haben können Sie hier Ihre BPol Adresse angeben.</p>
+      <form action="#" th:action="'/submit/' + ${answer}" th:object="${emailform}" method="post">
+        <input placeholder="ihre-email@bpol.bund.de" class="text-input-field" type="email" th:field="*{emailadress}">
+      </form>
+    </div>
   </div>
 </body>
 </html>
