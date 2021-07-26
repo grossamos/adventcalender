@@ -1,6 +1,7 @@
 package com.bundespolizei.adventcalender.controller;
 
 import com.bundespolizei.adventcalender.database.AdventRepository;
+import com.bundespolizei.adventcalender.helper.JwtUtil;
 import com.bundespolizei.adventcalender.helper.ResourceUtil;
 import com.bundespolizei.adventcalender.model.AdventQuestionSingleton;
 import com.bundespolizei.adventcalender.model.EmailForm;
@@ -13,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 
@@ -40,7 +43,14 @@ public class IndexController {
     }
 
     @GetMapping("/answer/{answerIndex}")
-    public String answerForm(@PathVariable int answerIndex, Model model) {
+    public String answerForm(@PathVariable int answerIndex, Model model, @CookieValue(value = "email", defaultValue = "NONE") String emailJWT) {
+        String email = JwtUtil.decodeJWT(emailJWT, JwtUtil.KEY);
+        if (!emailJWT.equals("NONE") && !email.equals("")) {
+            adventRepository.save(new ParticipantDbEntry(email, LocalDate.now(), answerIndex));
+            model.addAttribute("isOkay", true);
+            return "submit";
+        }
+
         model.addAttribute("answer", answerIndex);
         model.addAttribute("someGivenAnswer", answerIndex);
         model.addAttribute("emailform", new EmailForm());
@@ -48,12 +58,15 @@ public class IndexController {
     }
 
     @PostMapping("/submit/{answerIndex}")
-    @GetMapping("/submit/{answerIndex}")
-    public String emailSubmission(@PathVariable int answerIndex, @ModelAttribute EmailForm emailForm, Model model) {
+    public String emailSubmission(@PathVariable int answerIndex, @ModelAttribute EmailForm emailForm, Model model, HttpServletResponse response) {
         boolean isOkay = emailForm.getEmailadress().endsWith("@amosgross.com");
         model.addAttribute("isOkay", isOkay);
         if (isOkay && !adventRepository.existsById(emailForm.getEmailadress())) {
             adventRepository.save(new ParticipantDbEntry(emailForm.getEmailadress(), LocalDate.now(), answerIndex));
+            Cookie cookie = new Cookie("email", JwtUtil.encodeAsJWT(emailForm.getEmailadress(), JwtUtil.KEY));
+            cookie.setMaxAge(25 * 24 * 60 * 60);
+            cookie.setPath("/");
+            response.addCookie(cookie);
         }
         return "submit";
     }
