@@ -1,9 +1,13 @@
 package com.bundespolizei.adventcalender.controller;
 
+import com.bundespolizei.adventcalender.database.AdventRepository;
+import com.bundespolizei.adventcalender.helper.ResourceUtil;
 import com.bundespolizei.adventcalender.model.AdventQuestionSingleton;
 import com.bundespolizei.adventcalender.model.EmailForm;
+import com.bundespolizei.adventcalender.model.ParticipantDbEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +20,14 @@ import java.time.LocalDate;
 @RequestMapping("/")
 public class IndexController {
 
-    Logger logger = LoggerFactory.getLogger(IndexController.class);
+    private Logger logger = LoggerFactory.getLogger(IndexController.class);
+
+    @Autowired
+    private AdventRepository adventRepository;
 
     @GetMapping("/")
     public String landingPage(Model model) throws IOException {
-        AdventQuestionSingleton questions = AdventQuestionSingleton.getInstance("./src/test/resources/test_question.json");
+        AdventQuestionSingleton questions = AdventQuestionSingleton.getInstance(ResourceUtil.QUESTION_PATH);
         LocalDate today = LocalDate.now();
         model.addAttribute("question", questions.getTodaysQuestion());
         return "index";
@@ -45,9 +52,8 @@ public class IndexController {
     public String emailSubmission(@PathVariable int answerIndex, @ModelAttribute EmailForm emailForm, Model model) {
         boolean isOkay = emailForm.getEmailadress().endsWith("@amosgross.com");
         model.addAttribute("isOkay", isOkay);
-        if (isOkay) {
-            // TODO add interaction with database
-            logger.info(emailForm.getEmailadress() + " " + emailForm.getSelectedAnswerIndex());
+        if (isOkay && !adventRepository.existsById(emailForm.getEmailadress())) {
+            adventRepository.save(new ParticipantDbEntry(emailForm.getEmailadress(), LocalDate.now(), answerIndex));
         }
         return "submit";
     }

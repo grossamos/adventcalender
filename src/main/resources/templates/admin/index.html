@@ -6,5 +6,9 @@
 </head>
 <body>
     <p>Admin panel</p>
+    <p th:text="'Winner: ' + ${random.emailAddress}"></p>
+    <div th:each="participant : ${participants}">
+        <p th:text="${participant.emailAddress} + ' ' + ${participant.selectedIndex}"></p>
+    </div>
 </body>
 </html>
