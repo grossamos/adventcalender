@@ -1,0 +1,11 @@
+:root {
+    --navbar-text-color: white;
+    --navbar-top-distance: 1em;
+    --navbar-side-distance: 0.5em
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    font-family: "Cantarell";
+}

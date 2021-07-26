@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Hello</title>
+    <th:block th:include="headerfiles.html :: headerfiles"></th:block>
 </head>
 <body>
-    <p>Hello World! <th:block th:text="${message}">message</th:block></p>
+    <nav th:replace="titlebar.html :: navbar">
+    </nav>
+    <div class="main-content">
+        <h2 th:text="${question.getQuestion()}"></h2>
+        <div th:each="answer, stat : ${question.getAnswers()}">
+            <a th:href="'/answer/' + ${stat.index}" th:text="${answer}"></a>
+        </div>
+    </div>
 </body>
 </html>

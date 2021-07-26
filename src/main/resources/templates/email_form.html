@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <th:block th:include="headerfiles.html :: headerfiles"></th:block>
+</head>
+<body>
+  <nav th:replace="titlebar.html :: navbar"></nav>
+  <div class="main-content">
+    <form action="#" th:action="'/submit/' + ${answer}" th:object="${emailform}" method="post">
+      <label>email: </label>
+      <input type="email" th:field="*{emailadress}">
+    </form>
+  </div>
+</body>
+</html>

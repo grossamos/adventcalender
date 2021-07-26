@@ -1,0 +1,10 @@
+body {
+}
+
+.main-content {
+    position: fixed;
+    top: 5em;
+    background-color: white;
+    z-index: 40;
+    padding: 1em;
+}
