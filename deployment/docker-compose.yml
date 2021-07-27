@@ -5,11 +5,19 @@ services:
     image: mariadb:10.6.3
     restart: unless-stopped
     env_file:
-      - db-config.env
-    ports:
-      - 3306:3306
+      - config.env
+      - docker-config.env
     volumes:
       - dbvol:/var/lib/mysql
+  application:
+    build:
+      dockerfile: deployment/Dockerfile
+      context: ../
+    env_file:
+      - config.env
+      - docker-config.env
+    ports:
+      - 8080:8080
 
 volumes:
   dbvol:
