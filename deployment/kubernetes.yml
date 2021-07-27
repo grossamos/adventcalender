@@ -1,0 +1,146 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-volumeclaim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - image: mariadb:10.6.3
+          name: mysql
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: advent-secret
+                  key: mysql-root-password
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: advent-secret
+                  key: mysql-password
+            - name: MARIADB_DATABASE
+              value: advent
+            - name: MARIADB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: advent-secret
+                  key: mysql-username
+          ports:
+            - containerPort: 3306
+              name: mysql
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-volumeclaim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3306
+  selector:
+    app: mysql
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: advent
+  labels:
+    app: advent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: advent
+  template:
+    metadata:
+      labels:
+        app: advent
+    spec:
+      containers:
+        - image: bpol_advent
+          imagePullPolicy: Never
+          name: advent
+          args:
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: advent-secret
+                  key: mysql-root-password
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: advent-secret
+                  key: mysql-password
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: advent-secret
+                  key: mysql-database
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: advent-secret
+                  key: mysql-username
+            - name: ADMIN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: advent-secret
+                  key: admin-token
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: advent-secret
+                  key: jwt-secret
+            - name: JDBC_DATASOURCE
+              valueFrom:
+                secretKeyRef:
+                  name: advent-secret
+                  key: jdbc-datasource
+          ports:
+            - containerPort: 8080
+              name: advent
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: advent-service
+spec:
+  selector:
+    app: advent
+  type: LoadBalancer  
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30000
