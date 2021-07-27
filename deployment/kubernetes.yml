@@ -103,10 +103,7 @@ spec:
                   name: advent-secret
                   key: mysql-password
             - name: MYSQL_DATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: advent-secret
-                  key: mysql-database
+              value: advent
             - name: MYSQL_USER
               valueFrom:
                 secretKeyRef:
