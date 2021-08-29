@@ -71,6 +71,11 @@ public class IndexController {
         return "submit";
     }
 
+    @GetMapping("/admin")
+    public RedirectView winnerRedirect() {
+        return new RedirectView("/admin/");
+    }
+
     // TODO add PROPPER /error page for 404, 403, etc.
     @GetMapping("/error")
     public String error() {

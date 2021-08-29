@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <th:block th:include="headerfiles.html :: headerfiles"></th:block>
+    <link th:href="@{/css/admin.css}" rel="stylesheet" />
+</head>
+<body>
+<nav th:replace="admin/titlebar.html :: navbar"></nav>
+<div class="card-main-content">
+    <h2 class="card-title">Overview</h2>
+    <div class="card-content">
+        <th:p class="card-text" th:text="${random}"></th:p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Admin</title>
+    <th:block th:include="headerfiles.html :: headerfiles"></th:block>
+    <link th:href="@{/css/admin.css}" rel="stylesheet" />
 </head>
 <body>
-    <p>Admin panel</p>
-    <a th:text="Today" th:href="'/admin/' + ${authToken} + '/winner'"></a>
-    <p th:text="'Random: ' + ${random.emailAddress}"></p>
-    <div th:each="participant : ${participants}">
-        <p th:text="${participant.emailAddress} + ' ' + ${participant.selectedIndex}"></p>
+<nav th:replace="admin/titlebar.html :: navbar"></nav>
+<div class="card-main-content">
+    <h2 class="card-title">Overview</h2>
+    <div class="card-content">
+        <p class="card-text">Zufällige Auswahl:</p>
+        <p class="card-text">- <a class="admin-link" th:href="@{/admin/winner/today}" href="#">Heute</a></p>
+        <p class="card-text">- <a class="admin-link" th:href="@{/admin/winner/yesterday}" href="#">Gestern</a></p>
+        <p class="card-text">- <a class="admin-link" th:href="@{/admin/winner/daybeforeyesterday}" href="#">Vorgestern</a></p>
     </div>
+</div>
 </body>
 </html>

@@ -6,9 +6,6 @@ import com.bundespolizei.adventcalender.helper.ResourceUtil;
 import com.bundespolizei.adventcalender.model.AdventQuestionSingleton;
 import com.bundespolizei.adventcalender.model.ParticipantDbEntry;
 import com.bundespolizei.adventcalender.model.QuestionModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,50 +24,47 @@ import java.util.stream.StreamSupport;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private Logger logger = LoggerFactory.getLogger(AdminController.class);
+    private final AdventRepository adventRepository;
 
-    @Autowired
-    private AdventRepository adventRepository;
+    public AdminController(AdventRepository adventRepository) {
+        this.adventRepository = adventRepository;
+    }
 
-    @GetMapping("/{authToken}")
-    public String landingPage(Model model, @PathVariable String authToken) {
-        if (!hasProperAuth(authToken)) {
-            return "error";
-        }
-        model.addAttribute("authToken", authToken);
-
+    @GetMapping("/")
+    public String landingPage(Model model) {
         List<ParticipantDbEntry> participants = StreamSupport.stream(adventRepository.findAll().spliterator(), false).collect(Collectors.toList());
         model.addAttribute("participants", participants);
         model.addAttribute("random", participants.get(Randomiser.getRandomNumber(0, participants.size())));
         return "admin/index";
     }
 
-    @GetMapping("/{authToken}/winner/of/{day}")
-    public String potentialWinners(Model model, @PathVariable int day, @PathVariable String authToken) throws IOException {
-        logger.info(authToken);
-        if (!hasProperAuth(authToken)) {
-            return "error";
-        }
-        model.addAttribute("authToken", authToken);
-
+    @GetMapping("/winner/of/{day}")
+    public String potentialWinners(Model model, @PathVariable int day) throws IOException {
         AdventQuestionSingleton questionSingleton = AdventQuestionSingleton.getInstance(ResourceUtil.QUESTION_PATH);
         QuestionModel question = questionSingleton.getQuestions()[day - 1];
         LocalDate today = LocalDate.now();
-        List participants = adventRepository.findAllByEntryDateAndAndSelectedIndex(LocalDate.of(today.getYear(), today.getMonth(), day), question.getCorrectAnswerIndex());
-        model.addAttribute("participants", participants);
-        model.addAttribute("random", participants.get(Randomiser.getRandomNumber(0, participants.size())));
-        return "admin/index";
+        List<ParticipantDbEntry> participants = adventRepository.findAllByEntryDateAndAndSelectedIndex(LocalDate.of(today.getYear(), today.getMonth(), day), question.getCorrectAnswerIndex());
+        if (participants.size() == 0) {
+            model.addAttribute("random", "No entry");
+        } else {
+            model.addAttribute("random", participants.get(Randomiser.getRandomNumber(0, participants.size())).getEmailAddress());
+        }
+        return "admin/winner";
     }
 
-    @GetMapping("/{authToken}/winner")
-    public RedirectView winnerRedirect(@PathVariable String authToken) {
-        return new RedirectView("/admin/" + authToken + "/winner/of/" + LocalDate.now().getDayOfMonth());
+    @GetMapping("/winner/today")
+    public RedirectView winnerRedirectToday() {
+        return new RedirectView("/admin/" + "winner/of/" + LocalDate.now().getDayOfMonth());
     }
 
-    // TODO implement propper Auth with Spring security
-    private boolean hasProperAuth(String authToken) {
-        logger.info(System.getenv("JWT_SECRET"));
-        return authToken.equals(System.getenv("ADMIN_TOKEN"));
+    @GetMapping("/winner/yesterday")
+    public RedirectView winnerRedirectYesterday() {
+        return new RedirectView("/admin/" + "winner/of/" + LocalDate.now().minusDays(1).getDayOfMonth());
+    }
+
+    @GetMapping("/winner/daybeforeyesterday")
+    public RedirectView winnerRedirectDayBeforeYesterday() {
+        return new RedirectView("/admin/" + "winner/of/" + LocalDate.now().minusDays(2).getDayOfMonth());
     }
 
 }

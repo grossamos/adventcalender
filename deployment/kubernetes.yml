@@ -114,6 +114,16 @@ spec:
                 secretKeyRef:
                   name: advent-secret
                   key: admin-token
+            - name: ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: advent-secret
+                  key: admin-uname
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: advent-secret
+                  key: admin-password
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:

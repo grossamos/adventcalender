@@ -2,7 +2,6 @@ package com.bundespolizei.adventcalender.helper;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.boot.json.JsonParseException;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
@@ -12,9 +11,6 @@ public class JwtUtil {
 
     static {
         String keyString = System.getenv("JWT_SECRET");
-        if (keyString == null) {
-            keyString = "EMPTY";
-        }
         KEY = new SecretKeySpec(keyString.getBytes(), SignatureAlgorithm.HS256.getJcaName());
     }
 

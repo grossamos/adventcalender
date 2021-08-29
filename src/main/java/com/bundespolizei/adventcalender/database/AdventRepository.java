@@ -7,5 +7,5 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface AdventRepository extends CrudRepository<ParticipantDbEntry, String> {
-    List findAllByEntryDateAndAndSelectedIndex(LocalDate entryDate, Integer selectedIndex);
+    List<ParticipantDbEntry> findAllByEntryDateAndAndSelectedIndex(LocalDate entryDate, Integer selectedIndex);
 }
