@@ -24,4 +24,4 @@ Build the docker image locally (or push it to a private repository): ``docker bu
 
 Then apply both configs, with the secrets first (of which you also changed the passwords): ``kubectl apply -f deployment/kubernetes-secret.yml && kubectl apply -f deployment/kubernetes.yml``.
 
-Optimally you would then use an ingress controller (not a node port), along with an ssl certificate to open up the service to the world.
+If you wish to use the ingress deployment yourself, it would probably be best to alter domain name and certificate resolvers to the ones you wish to use in your environment.
