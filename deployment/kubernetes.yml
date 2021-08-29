@@ -132,12 +132,41 @@ apiVersion: v1
 kind: Service
 metadata:
   name: advent-service
+  labels:
+    app: advent
 spec:
   selector:
     app: advent
-  type: LoadBalancer  
   ports:
     - protocol: TCP
       port: 8080
-      targetPort: 8080
-      nodePort: 30000
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: advent-ingressroutenotls
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`advent.amosgross.com`)
+    kind: Rule
+    services:
+    - name: advent-service
+      port: 8080
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: advent-ingressroutetls
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`advent.amosgross.com`)
+    kind: Rule
+    services:
+    - name: advent-service
+      port: 8080
+  tls:
+    certResolver: myresolver
