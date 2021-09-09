@@ -31,10 +31,7 @@ public class AdminController {
     }
 
     @GetMapping("/")
-    public String landingPage(Model model) {
-        List<ParticipantDbEntry> participants = StreamSupport.stream(adventRepository.findAll().spliterator(), false).collect(Collectors.toList());
-        model.addAttribute("participants", participants);
-        model.addAttribute("random", participants.get(Randomiser.getRandomNumber(0, participants.size())));
+    public String landingPage() {
         return "admin/index";
     }
 
