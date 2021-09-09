@@ -20,7 +20,7 @@ jobs:
       - name: Docker Login
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login registry.amosgross.com -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
       - name: Build Docker Image
-        run: docker build -t registry.amosgross.com/bpol_advent:latest .
+        run: docker build -t registry.amosgross.com/bpol_advent:latest -f deployment/Dockerfile .
       - name: Push Docker Image
         run: docker push registry.amosgross.com/bpol_advent:latest
       - name: Kube Update Deployment
