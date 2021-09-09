@@ -1,0 +1,40 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Build Maven Artifact
+        run: mvn package
+      - name: Docker Login
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login registry.amosgross.com -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+      - name: Build Docker Image
+        run: docker build -t registry.amosgross.com/bpol_advent:latest .
+      - name: Push Docker Image
+        run: docker push registry.amosgross.com/bpol_advent:latest
+      - name: Kube Update Deployment
+        uses: nickgronow/kubectl@master
+        with:
+          config_data: ${{ secrets.KUBE_CONFIG_DATA }}
+          args: -n advent apply -f ./deployment/kubernetes
+      - name: Kube Update image
+        uses: nickgronow/kubectl@master
+        with:
+          config_data: ${{ secrets.KUBE_CONFIG_DATA }}
+          args: -n advent set image deployment/advent advent=registry.amosgross.com/bpol_advent
+      - name: Kube Image Cleanup
+        uses: nickgronow/kubectl@master
+        with:
+          config_data: ${{ secrets.KUBE_CONFIG_DATA }}
+          args: -n advent set image deployment/advent advent=registry.amosgross.com/bpol_advent:latest
