@@ -87,8 +87,7 @@ spec:
         app: advent
     spec:
       containers:
-        - image: bpol_advent
-          imagePullPolicy: Never
+        - image: registry.amosgross.com/bpol_advent
           name: advent
           args:
           env:
@@ -109,11 +108,6 @@ spec:
                 secretKeyRef:
                   name: advent-secret
                   key: mysql-username
-            - name: ADMIN_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: advent-secret
-                  key: admin-token
             - name: ADMIN_USERNAME
               valueFrom:
                 secretKeyRef:
